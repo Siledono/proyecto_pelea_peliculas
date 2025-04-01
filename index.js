@@ -1,6 +1,6 @@
 //65904a8a API KEY 
 
-const fetchData = async(searchTerm) => {
+/* const fetchData = async(searchTerm) => {
     const response = await axios.get("https://omdbapi.com/",{
         params: {
         apikey:"65904a8a",
@@ -10,10 +10,104 @@ const fetchData = async(searchTerm) => {
     if(response.data.Error){
         return[]
     }
-    console.log(response.data.Search)
-}
+    console.log(response.data)
+    console.log(response.data)
+    return response.data.Search
+} */
 //fetchData()
 
+autocompleteConfig = {
+    renderOption(movie){
+        const imgSrc = movie.Poster === 'N/A' ? '' : movie.Poster
+        return `
+            <img src = "${imgSrc}"/>
+            ${movie.Title} (${movie.Year})
+        `
+    },
+    inputValue(movie){
+        return movie.Title
+    },
+    async fetchData(searchTerm) {
+        apiMovieURL = 'https://omdbapi.com/'
+        const response = await axios.get(apiMovieURL, {
+            params: '65904a8a',
+            s: searchTerm
+        })
+        if(response.data.Error){
+            return []
+        }
+
+        console.log(response.data)
+        return response.data.Search
+    }
+}
+
+createAutoComplete({
+    ...autocompleteConfig,
+    root: document.querySelector('#left-autocomplete'),
+    onOptionSelect(Movie){
+        document.querySelector('.tutorial').classList.add('is-hidden')
+        onMovieSelect(movie, document.querySelector('#left-summery'), 'left')
+    }
+})
+
+createAutoComplete({
+    ...autocompleteConfig,
+    root: document.querySelector('#right-autocomplete'),
+    onOptionSelect(Movie){
+        document.querySelector('.tutorial').classList.add('is-hidden')
+        onMovieSelect(movie, document.querySelector('#right-summery'), 'right')
+    }
+})
+
+//Crear dos variables para left Movie y right Movie
+
+let leftMovie
+let rightMovie
+
+const onMovieSelect = async (movie,summaryElement, side) => {
+    const response = await axios.get("https://omdbapi.com/",{
+        params: {
+            apikey: '65904a8a',
+            i: movie.imbID
+        }
+    })
+    console.log(response.data)
+    summaryElement.innerHTML = movieTemplate(response.data)
+
+    //Preguntame cual lado es
+    if(side === 'left'){
+        leftMovie = response.data
+    }else{
+        rightMovie = response.data
+    }
+    //Preguntamos si tenemos ambos lados
+    if(leftMovie && rightMovie){
+        // Entonces ejecutamos la funcion comparacion
+        runComparasion()
+    }
+}
+
+const runComparasion = () => {
+    console.log('Comparasion de peliculas')
+    const leftSideStats = document.querySelectorAll('#left-summary .notification')
+    const rightSideStats = document.querySelectorAll('#right-summary .notification')
+
+    leftSideStats.forEach((leftStat, index) => {
+        const rightStat = rightSideStats(index)
+        const leftSideValue = parseInt(leftStat.dataset.value)
+        const rightSideValue = parseInt(rightStat.dataset.value)
+
+        if(rightSideValue > leftSideValue){
+            leftStat.classList.remove('is-primary')
+            leftStat.classList.add('is-danger')
+        }else{
+            rightStat.classList.remove('is-primary')
+            rightStat.classList.add('is-danger')
+        }
+    })
+}
+ 
 const root = document.querySelector('.autocomplete')
 root.innerHTML = `
     <label><b> Busqueda de Peliculas </b></label>
