@@ -37,7 +37,7 @@ const onInput = async event => {
 }
 
 resultwrapper.innerHTML = ''
-dropdown.classList.add('is-activate')
+dropdown.classList.add('is-active')
 for (let item of items) {
     const option = document.createElement('a')
 
