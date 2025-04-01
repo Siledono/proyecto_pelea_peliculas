@@ -8,7 +8,8 @@ const createAutocomplete = ({root, rederOption, onOptionSelect, inputValue, fetc
                 <div class = "dropdown-content results"></div>
             </div>
         </div>
-    `   
+    `  
+     
 }
 
 const input = root.querySelector('input')
@@ -30,15 +31,13 @@ const onInput = async event => {
     console.log("Movies", items)
  
     if(!items.length){
-        dropdown.classList.remove('is-activate')
+        dropdown.classList.remove('is-active')
         return
     }
 
-}
-
-resultwrapper.innerHTML = ''
-dropdown.classList.add('is-active')
-for (let item of items) {
+    resultwrapper.innerHTML = ''
+    dropdown.classList.add('is-active')
+    for (let item of items) {
     const option = document.createElement('a')
 
     option.classList.add('dropdown-item')
@@ -50,4 +49,17 @@ for (let item of items) {
         console.log("onMovieSelect")
     })
     resultsWeapper.appendChild(option)
+
+    
+    }
+    input.addEventListener('input', debounce(oninput,1000))
+    
+    document.addEventListener('click', event => {
+        if(!root.contains(event.target)){
+            dropdown.classList.remove('is-activate')
+        }
+    })
+
 }
+
+
