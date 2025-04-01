@@ -38,15 +38,15 @@ const onInput = async event => {
     resultwrapper.innerHTML = ''
     dropdown.classList.add('is-active')
     for (let item of items) {
-    const option = document.createElement('a')
+        const option = document.createElement('a')
 
-    option.classList.add('dropdown-item')
-    option.innerHTML = renderOption(item)
-    option.addEventListener('click', () => {
-        dropdown.classList.remove('is-activate')
-        input.value = inputValue(item)
-        onOptionSelect(item)
-        console.log("onMovieSelect")
+        option.classList.add('dropdown-item')
+        option.innerHTML = renderOption(item)
+        option.addEventListener('click', () => {
+            dropdown.classList.remove('is-activate')
+            input.value = inputValue(item)
+            onOptionSelect(item)
+            console.log("onMovieSelect")
     })
     resultsWeapper.appendChild(option)
 
