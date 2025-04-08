@@ -1,5 +1,5 @@
 const createAutocomplete = ({root, rederOption, onOptionSelect, inputValue, fetchData}) => {
-    
+    print(root)
     root.innerHTML = `
         <label><b>Busqueda</b></label>
         <input class="input"/>
